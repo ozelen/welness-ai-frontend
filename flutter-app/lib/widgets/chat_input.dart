@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class ChatInput extends StatefulWidget {
   final Function(String) onSendMessage;
@@ -44,10 +44,10 @@ class _ChatInputState extends State<ChatInput> {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: CupertinoColors.systemBackground,
         border: Border(
           top: BorderSide(
-            color: Colors.grey.shade300,
+            color: CupertinoColors.separator,
             width: 0.5,
           ),
         ),
@@ -60,22 +60,22 @@ class _ChatInputState extends State<ChatInput> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _QuickActionButton(
-                  icon: Icons.flag,
+                  icon: CupertinoIcons.flag,
                   label: 'Goal',
                   onTap: widget.onGoalTap,
-                  color: Colors.blue,
+                  color: CupertinoColors.systemBlue,
                 ),
                 _QuickActionButton(
-                  icon: Icons.restaurant,
+                  icon: CupertinoIcons.cart,
                   label: 'Meal',
                   onTap: widget.onMealTap,
-                  color: Colors.green,
+                  color: CupertinoColors.systemGreen,
                 ),
                 _QuickActionButton(
-                  icon: Icons.fitness_center,
+                  icon: CupertinoIcons.heart_fill,
                   label: 'Workout',
                   onTap: widget.onWorkoutTap,
-                  color: Colors.orange,
+                  color: CupertinoColors.systemOrange,
                 ),
               ],
             ),
@@ -85,7 +85,7 @@ class _ChatInputState extends State<ChatInput> {
           Row(
             children: [
               Expanded(
-                child: TextField(
+                child: CupertinoTextField(
                   controller: _controller,
                   onChanged: (value) {
                     setState(() {
@@ -93,33 +93,30 @@ class _ChatInputState extends State<ChatInput> {
                     });
                   },
                   onSubmitted: (_) => _sendMessage(),
-                  decoration: InputDecoration(
-                    hintText: 'Type your message...',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25),
-                      borderSide: BorderSide.none,
-                    ),
-                    filled: true,
-                    fillColor: Colors.grey.shade100,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
-                    ),
+                  placeholder: 'Type your message...',
+                  decoration: BoxDecoration(
+                    color: CupertinoColors.systemGrey6,
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
                   ),
                   maxLines: null,
                 ),
               ),
               const SizedBox(width: 8),
               Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
+                decoration: const BoxDecoration(
+                  color: CupertinoColors.systemGreen,
                   shape: BoxShape.circle,
                 ),
-                child: IconButton(
+                child: CupertinoButton(
+                  padding: const EdgeInsets.all(12),
                   onPressed: _sendMessage,
-                  icon: const Icon(
-                    Icons.send,
-                    color: Colors.white,
+                  child: const Icon(
+                    CupertinoIcons.arrow_up,
+                    color: CupertinoColors.white,
                   ),
                 ),
               ),

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'dashboard_page.dart';
 import 'diet_planning_page.dart';
 import 'barcode_scanner_page.dart';
@@ -24,6 +24,7 @@ class _MainNavigationState extends State<MainNavigation> {
   ];
 
   void _onItemTapped(int index) {
+    print('Button tapped!');
     setState(() {
       _selectedIndex = index;
     });
@@ -31,37 +32,40 @@ class _MainNavigationState extends State<MainNavigation> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
+    return CupertinoTabScaffold(
+      tabBar: CupertinoTabBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
-        unselectedItemColor: Colors.grey,
+        activeColor: CupertinoColors.systemGreen,
+        inactiveColor: CupertinoColors.systemGrey,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard),
+            icon: Icon(CupertinoIcons.home),
             label: 'Dashboard',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.restaurant_menu),
+            icon: Icon(CupertinoIcons.cart),
             label: 'Diet',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.qr_code_scanner),
+            icon: Icon(CupertinoIcons.qrcode),
             label: 'Scan',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
+            icon: Icon(CupertinoIcons.chat_bubble_2),
             label: 'Chat',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(CupertinoIcons.person),
             label: 'Profile',
           ),
         ],
       ),
+      tabBuilder: (context, index) {
+        return CupertinoTabView(
+          builder: (context) => _pages[index],
+        );
+      },
     );
   }
 } 

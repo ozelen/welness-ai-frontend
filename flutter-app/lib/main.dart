@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'dart:io';
 import 'pages/auth_page.dart';
 import 'pages/main_navigation.dart';
 
@@ -11,17 +13,29 @@ class WellnessAIApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Wellness AI',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF4CAF50), // Green theme for wellness
+    // Automatically detect platform and use appropriate design
+    if (Platform.isIOS) {
+      return CupertinoApp(
+        title: 'Wellness AI',
+        theme: const CupertinoThemeData(
+          primaryColor: CupertinoColors.systemGreen,
           brightness: Brightness.light,
         ),
-        useMaterial3: true,
-      ),
-      home: const AuthWrapper(),
-    );
+        home: const AuthWrapper(),
+      );
+    } else {
+      return MaterialApp(
+        title: 'Wellness AI',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color(0xFF4CAF50), // Green theme for wellness
+            brightness: Brightness.light,
+          ),
+          useMaterial3: true,
+        ),
+        home: const AuthWrapper(),
+      );
+    }
   }
 }
 

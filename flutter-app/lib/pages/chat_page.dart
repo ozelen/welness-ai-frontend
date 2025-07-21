@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
 import '../models/message.dart';
 import '../services/chat_service.dart';
@@ -84,10 +84,17 @@ class _ChatPageState extends State<ChatPage> {
       });
       
       // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+      showCupertinoDialog(
+        context: context,
+        builder: (context) => CupertinoAlertDialog(
+          title: const Text('Error'),
           content: Text('Failed to send message: $e'),
-          backgroundColor: Colors.red,
+          actions: [
+            CupertinoDialogAction(
+              child: const Text('OK'),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
         ),
       );
     }
@@ -107,135 +114,149 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('WellAI Chat'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.people),
-            onPressed: () {
-              // TODO: Navigate to human chat
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Human chat coming soon!')),
-              );
-            },
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Messages list
-          Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              padding: const EdgeInsets.all(16),
-              itemCount: _messages.length + (_isLoading ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index == _messages.length && _isLoading) {
-                  // Loading indicator
-                  return Padding(
-                    padding: const EdgeInsets.only(left: 16, top: 8, bottom: 8),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SizedBox(
-                                width: 16,
-                                height: 16,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    Theme.of(context).colorScheme.primary,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'WellAI is typing...',
-                                style: TextStyle(
-                                  color: Colors.grey.shade600,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-
-                final message = _messages[index];
-                final isUser = message.sender == MessageSender.user;
-
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(
-                    mainAxisAlignment: isUser 
-                        ? MainAxisAlignment.end 
-                        : MainAxisAlignment.start,
-                    children: [
-                      if (!isUser) ...[
-                        CircleAvatar(
-                          radius: 16,
-                          backgroundColor: Theme.of(context).colorScheme.primary,
-                          child: const Icon(
-                            Icons.health_and_safety,
-                            color: Colors.white,
-                            size: 16,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                      ],
-                      Flexible(
-                        child: BubbleSpecialThree(
-                          text: message.text,
-                          color: isUser 
-                              ? Theme.of(context).colorScheme.primary
-                              : Colors.grey.shade200,
-                          tail: true,
-                          isSender: isUser,
-                          textStyle: TextStyle(
-                            color: isUser ? Colors.white : Colors.black87,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                      if (isUser) ...[
-                        const SizedBox(width: 8),
-                        CircleAvatar(
-                          radius: 16,
-                          backgroundColor: Colors.grey.shade300,
-                          child: const Icon(
-                            Icons.person,
-                            color: Colors.white,
-                            size: 16,
-                          ),
-                        ),
-                      ],
-                    ],
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: const Text('WellAI Chat'),
+        backgroundColor: CupertinoColors.systemBackground,
+        trailing: CupertinoButton(
+          padding: EdgeInsets.zero,
+          child: const Icon(CupertinoIcons.person_2),
+          onPressed: () {
+            // TODO: Navigate to human chat
+            showCupertinoDialog(
+              context: context,
+              builder: (context) => CupertinoAlertDialog(
+                title: const Text('Coming Soon'),
+                content: const Text('Human chat feature is coming soon!'),
+                actions: [
+                  CupertinoDialogAction(
+                    child: const Text('OK'),
+                    onPressed: () => Navigator.pop(context),
                   ),
-                );
-              },
-            ),
+                ],
+              ),
+            );
+          },
+        ),
+              ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Messages list
+              Expanded(
+                child: ListView.builder(
+                  controller: _scrollController,
+                  padding: const EdgeInsets.all(16),
+                  itemCount: _messages.length + (_isLoading ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    if (index == _messages.length && _isLoading) {
+                      // Loading indicator
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 16, top: 8, bottom: 8),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: CupertinoColors.systemGrey5,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: CupertinoActivityIndicator(),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    'WellAI is typing...',
+                                    style: TextStyle(
+                                      color: CupertinoColors.systemGrey,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    final message = _messages[index];
+                    final isUser = message.sender == MessageSender.user;
+
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Row(
+                        mainAxisAlignment: isUser 
+                            ? MainAxisAlignment.end 
+                            : MainAxisAlignment.start,
+                        children: [
+                          if (!isUser) ...[
+                            Container(
+                              width: 32,
+                              height: 32,
+                              decoration: const BoxDecoration(
+                                color: CupertinoColors.systemGreen,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                CupertinoIcons.heart_fill,
+                                color: CupertinoColors.white,
+                                size: 16,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                          ],
+                          Flexible(
+                            child: BubbleSpecialThree(
+                              text: message.text,
+                              color: isUser 
+                                  ? CupertinoColors.systemGreen
+                                  : CupertinoColors.systemGrey5,
+                              tail: true,
+                              isSender: isUser,
+                              textStyle: TextStyle(
+                                color: isUser ? CupertinoColors.white : CupertinoColors.label,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          if (isUser) ...[
+                            const SizedBox(width: 8),
+                            Container(
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                color: CupertinoColors.systemGrey4,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                CupertinoIcons.person_fill,
+                                color: CupertinoColors.white,
+                                size: 16,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+              // Chat input
+              ChatInput(
+                onSendMessage: _sendMessage,
+                onGoalTap: _onGoalTap,
+                onMealTap: _onMealTap,
+                onWorkoutTap: _onWorkoutTap,
+              ),
+            ],
           ),
-          // Chat input
-          ChatInput(
-            onSendMessage: _sendMessage,
-            onGoalTap: _onGoalTap,
-            onMealTap: _onMealTap,
-            onWorkoutTap: _onWorkoutTap,
-          ),
-        ],
-      ),
+        ),
     );
   }
 } 
